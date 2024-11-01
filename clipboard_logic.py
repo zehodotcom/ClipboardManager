@@ -13,9 +13,8 @@ class ClipboardManager:
             # Check if the current clipboard content is different from the last saved content
             if current_content != self.last_content and current_content.strip():
                 self.last_content = current_content
-                timestamp = time.strftime(
-                    "%Y-%m-%d %H:%M:%S"
-                )  # Get the current timestamp
+                # Get the current timestamp with day of the week in English
+                timestamp = time.strftime("%A, %Y-%m-%d %H:%M:%S")
                 self.clipboard_history.append((current_content, timestamp))
                 callback(
                     current_content, timestamp
