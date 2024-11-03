@@ -20,17 +20,15 @@ class ClipboardApp:
         )
         self.text_display.pack(pady=10)
 
-        # Configure text colors for the entry number, timestamp, and content
+        # Configure text colors for entry number, timestamp, and content
         self.text_display.tag_config("number", foreground="lightgreen")
         self.text_display.tag_config("timestamp", foreground="cyan")
-        self.text_display.tag_config(
-            "content", foreground="lightyellow"
-        )  # Set color for copied content
+        self.text_display.tag_config("content", foreground="lightyellow")
 
         # Check initial clipboard content at startup
         initial_content = pyperclip.paste()
         if initial_content.strip():
-            self.manager.last_content = initial_content
+            self.manager.last_text_content = initial_content
             self.update_display(initial_content, time.strftime("%Y-%m-%d %H:%M:%S"))
 
         # Start a thread to monitor the clipboard
@@ -52,7 +50,7 @@ class ClipboardApp:
         self.text_display.insert(tk.END, f"[{timestamp}] ", "timestamp")
         self.text_display.insert(
             tk.END, f"{new_content}", "content"
-        )  # Apply the "content" tag for color
+        )  # Apply "content" tag for color
 
 
 if __name__ == "__main__":
