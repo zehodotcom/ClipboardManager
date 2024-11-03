@@ -5,7 +5,6 @@ import threading
 import pyperclip
 import time
 
-
 class ClipboardApp:
     def __init__(self, root):
         self.manager = ClipboardManager()
@@ -20,16 +19,17 @@ class ClipboardApp:
         )
         self.text_display.pack(pady=10)
 
-        # Configure text colors for entry number, timestamp, and content
+        # Configure text colors for entry number, timestamp, and content type
         self.text_display.tag_config("number", foreground="lightgreen")
         self.text_display.tag_config("timestamp", foreground="cyan")
+        self.text_display.tag_config("content_type", foreground="orange")  # Content type color
         self.text_display.tag_config("content", foreground="lightyellow")
 
         # Check initial clipboard content at startup
         initial_content = pyperclip.paste()
         if initial_content.strip():
             self.manager.last_text_content = initial_content
-            self.update_display(initial_content, time.strftime("%Y-%m-%d %H:%M:%S"))
+            self.update_display("Text", initial_content, time.strftime("%Y-%m-%d %H:%M:%S"))
 
         # Start a thread to monitor the clipboard
         threading.Thread(
@@ -38,20 +38,18 @@ class ClipboardApp:
             daemon=True,
         ).start()
 
-    def save_and_display_content(self, new_content, timestamp):
-        self.update_display(new_content, timestamp)
+    def save_and_display_content(self, content_type, new_content, timestamp):
+        self.update_display(content_type, new_content, timestamp)
 
-    def update_display(self, new_content, timestamp):
+    def update_display(self, content_type, new_content, timestamp):
         if self.text_display.get("1.0", tk.END).strip():
             self.text_display.insert(tk.END, "\n")  # Add a newline before the new entry
 
         entry_number = len(self.manager.get_history())
         self.text_display.insert(tk.END, f"{entry_number}. ", "number")
         self.text_display.insert(tk.END, f"[{timestamp}] ", "timestamp")
-        self.text_display.insert(
-            tk.END, f"{new_content}", "content"
-        )  # Apply "content" tag for color
-
+        self.text_display.insert(tk.END, f"[{content_type}] ", "content_type")
+        self.text_display.insert(tk.END, f"{new_content}", "content")
 
 if __name__ == "__main__":
     root = tk.Tk()
